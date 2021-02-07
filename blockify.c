@@ -7,10 +7,21 @@
     #define Sleep(x) usleep((x)*1000)
 #endif
 
+#define STB_IMAGE_IMPLEMENTATION
+#define STBI_MAX_DIMENSIONS 20000
+#define STBI_ONLY_PNG
+#include "include/stb_image.h"
+
+#define STB_IMAGE_RESIZE_IMPLEMENTATION
+#include "include/stb_image_resize.h"
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "include/stb_image_write.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-
+#include <math.h>
 
 int main(int argc, char* argv[])  {
     
@@ -24,12 +35,39 @@ int main(int argc, char* argv[])  {
     char* imageType = inputImage + (strlen(inputImage) - 4);  // Credit: Baptiste E. Prunier 
                                                               // https://bit.ly/2MZNq66
     if (strcmp(imageType, ".png") != 0){
-        printf("ERROR: Unsupported image type...\n");
+        printf("ERROR: Unsupported file type...\n");
         printf("       Please use PNG\n");
         Sleep(5000);
         exit(1);
     }
 
-    printf("Using image: %s", inputImage);
+    int width, height, channels;
+    unsigned char* inImage = stbi_load(inputImage, &width, &height, &channels, 0);
+    
+    if(inImage == NULL) {
+        printf("ERROR: Couldn't load image...\n");
+        exit(1);
+    }
+
+    printf("INFO: Loaded image: %s\n", inputImage);
+    printf("            Width : %d px\n", width);
+    printf("           Height : %d px\n", height);
+    printf("         Channels : %d\n\n", channels);
+
+    int blockHeight = 194;  // Max block height (256) - sea level (62)
+    int blockWidth = round(width * ((float)blockHeight / height));  // Keeps ratio
+    printf("INFO: Blockified resolution!\n");
+    printf("      Block Width : %d blocks\n", blockWidth);
+    printf("     Block Height : %d blocks\n\n", blockHeight);
+
+    char* outImage = (unsigned char *) malloc(blockWidth * blockHeight * channels);
+
+    stbir_resize_uint8(inImage , width , height , 0,
+                       outImage, blockWidth, blockHeight, 0, channels);
+    printf("INFO: Resized image!\n\n");
+
+    stbi_write_png("blockifiy.png", blockWidth, blockHeight, channels, outImage, blockWidth * channels);    
+    printf("INFO: Saved resized image!\n\n");              
+
     Sleep(5000);
 }
