@@ -27,7 +27,12 @@ Must be one of the following:
 - **revert**: Reverting a previois commit. Hash of the commit that is reverted needs to be inn the subject
 
 #### Scope:
-The scope should be the name of the the section of the codebase that is beeing changed. This is optional. Use if needed.
+The scope should be the name of the the section of the codebase that is beeing changed. This is optional. Use if needed.  
+  
+Allowed scopes:
+- **img2color**: Changes related to the img2color code
+- **block**: Changes related to block textures and block lists
+- **main**: Changes related to the main part of the codebase (blockify.c and its libs and headers)
 
 #### Subject:
 The subject contains a succinct description of the change:
