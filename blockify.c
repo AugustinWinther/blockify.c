@@ -17,11 +17,11 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_MAX_DIMENSIONS 20000
 #define STBI_ONLY_PNG
-#include "include/stb_image.h"
+#include "stb/stb_image.h"
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
-#include "include/stb_image_resize.h"
+#include "stb/stb_image_resize.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "include/stb_image_write.h"
+#include "stb/stb_image_write.h"
 
 int main(int argc, char* argv[])  {
     
